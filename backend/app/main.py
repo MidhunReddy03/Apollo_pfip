@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api import auth, patients, encounters, stations, queues, workflows, patient_portal
+from app.api import triage, queue_forecast, gates, audit, websocket
 from app.db.session import engine, Base, AsyncSessionLocal
 from app.models import User, UserRole
 from app.core.security import get_password_hash
@@ -123,6 +124,15 @@ app.include_router(stations.router, prefix=settings.API_V1_PREFIX)
 app.include_router(queues.router, prefix=settings.API_V1_PREFIX)
 app.include_router(workflows.router, prefix=settings.API_V1_PREFIX)
 app.include_router(patient_portal.router, prefix=settings.API_V1_PREFIX)
+
+# PFIP 4.0 Feature Routers
+app.include_router(triage.router, prefix=settings.API_V1_PREFIX)
+app.include_router(queue_forecast.router, prefix=settings.API_V1_PREFIX)
+app.include_router(gates.router, prefix=settings.API_V1_PREFIX)
+app.include_router(audit.router, prefix=settings.API_V1_PREFIX)
+
+# WebSocket router (no prefix for WebSocket routes)
+app.include_router(websocket.router)
 
 if __name__ == "__main__":
     import uvicorn
